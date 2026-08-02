@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  taxId     String?  @map("tax_id") @db.VarChar(50)
+  address   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users    User[]
+  clients  Client[]
+  products Product[]
+  orders   Order[]
+
+  @@map("companies")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  companyId    Int      @map("company_id")
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         String   @default("manager") @db.VarChar(50)
+  position     String?  @db.VarChar(100)
+  isActive     Boolean  @default(true) @map("is_active")
+  lastLogin    DateTime? @map("last_login")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, email])
+  @@map("users")
+}
+
+model Client {
+  id            Int      @id @default(autoincrement())
+  companyId     Int      @map("company_id")
+  companyName   String   @map("company_name") @db.VarChar(255)
+  contactPerson String?  @map("contact_person") @db.VarChar(255)
+  phone         String?  @db.VarChar(50)
+  email         String?  @db.VarChar(255)
+  taxId         String?  @map("tax_id") @db.VarChar(50)
+  address       String?
+  creditLimit   Decimal  @default(0) @map("credit_limit") @db.Decimal(15, 2)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  orders  Order[]
+
+  @@unique([companyId, companyName])
+  @@map("clients")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  companyId   Int      @map("company_id")
+  name        String   @db.VarChar(255)
+  quantity    Decimal  @default(0) @db.Decimal(15, 4)
+  price       Decimal  @default(0) @db.Decimal(15, 2)
+  unit        String   @default("pcs") @db.VarChar(20)
+  minQuantity Decimal  @default(0) @map("min_quantity") @db.Decimal(15, 4)
+  category    String?  @db.VarChar(100)
+  barcode     String?  @db.VarChar(50)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@map("products")
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  companyId   Int      @map("company_id")
+  clientId    Int      @map("client_id")
+  totalAmount Decimal  @default(0) @map("total_amount") @db.Decimal(15, 2)
+  currency    String   @default("USD") @db.VarChar(10)
+  status      String   @default("pending") @db.VarChar(50)
+  notes       String?
+  orderDate   DateTime @default(now()) @map("order_date")
+  createdBy   Int?     @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  client  Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  items   OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @map("order_id")
+  productId  Int?     @map("product_id")
+  name       String   @db.VarChar(255)
+  quantity   Decimal  @db.Decimal(15, 4)
+  unit       String   @default("pcs") @db.VarChar(20)
+  unitPrice  Decimal  @map("unit_price") @db.Decimal(15, 2)
+  totalPrice Decimal  @map("total_price") @db.Decimal(15, 2)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}
+
+model Invoice {
+  id          Int      @id @default(autoincrement())
+  companyId   Int      @map("company_id")
+  orderId     Int      @map("order_id")
+  amount      Decimal  @db.Decimal(15, 2)
+  paidAmount  Decimal  @default(0) @map("paid_amount") @db.Decimal(15, 2)
+  currency    String   @default("USD") @db.VarChar(10)
+  status      String   @default("pending") @db.VarChar(50)
+  issueDate   DateTime @default(now()) @map("issue_date")
+  dueDate     DateTime @map("due_date")
+  paymentDate DateTime? @map("payment_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
+}
+
+model Shipment {
+  id              Int      @id @default(autoincrement())
+  companyId       Int      @map("company_id")
+  orderId         Int      @map("order_id")
+  supplierName    String   @map("supplier_name") @db.VarChar(255)
+  purchaseCost    Decimal  @default(0) @map("purchase_cost") @db.Decimal(15, 2)
+  logisticsCost   Decimal  @default(0) @map("logistics_cost") @db.Decimal(15, 2)
+  customsFee      Decimal  @default(0) @map("customs_fee") @db.Decimal(15, 2)
+  currency        String   @default("USD") @db.VarChar(10)
+  status          String   @default("ordered") @db.VarChar(50)
+  trackingNumber  String?  @map("tracking_number") @db.VarChar(100)
+  expectedArrival DateTime? @map("expected_arrival")
+  actualArrival   DateTime? @map("actual_arrival")
+  notes           String?
+  createdBy       Int?     @map("created_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("shipments")
+}
+
+model StockMovement {
+  id             Int      @id @default(autoincrement())
+  productId      Int      @map("product_id")
+  companyId      Int      @map("company_id")
+  quantityChange Decimal  @map("quantity_change") @db.Decimal(15, 4)
+  reason         String   @db.VarChar(50)
+  referenceId    Int?     @map("reference_id")
+  referenceType  String?  @map("reference_type") @db.VarChar(50)
+  createdBy      Int?     @map("created_by")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("stock_movements")
+}
