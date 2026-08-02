@@ -17,15 +17,11 @@ const queryClient = new QueryClient({
   },
 })
 
-// ✅ Добавьте флаги для React Router
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <App future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }} />
+        <App />
         <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       </QueryClientProvider>
     </Provider>
