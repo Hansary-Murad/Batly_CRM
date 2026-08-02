@@ -24,8 +24,12 @@ const authSlice = createSlice({
       localStorage.removeItem('batly_token')
       localStorage.removeItem('batly_user')
     },
-    setLoading: (state, action) => { state.isLoading = action.payload },
-    setError: (state, action) => { state.error = action.payload },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload
+    },
+    setError: (state, action) => {
+      state.error = action.payload
+    },
   },
 })
 
