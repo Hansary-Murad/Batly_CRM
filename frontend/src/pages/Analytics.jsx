@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { Loader2 } from 'lucide-react'
-import api from '@/lib/api'
+import api from '../lib/api'
 import toast from 'react-hot-toast'
 
 const COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#7c3aed']
@@ -42,7 +42,6 @@ export function Analytics() {
     }
   }
 
-  // Подготовка данных для круговой диаграммы
   const pieData = topClients.length > 0 ? topClients.map((client, index) => ({
     name: client.company_name || `Клиент ${index + 1}`,
     value: parseFloat(client.total_revenue || 0)

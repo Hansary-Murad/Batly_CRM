@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { logout } from '@/store/slices/authSlice'
-import { Button } from '@/components/ui/Button'
+import { logout } from '../../store/slices/authSlice'
+import { Button } from '../ui/Button'
 import {
   LayoutDashboard, Users, FileText, Truck, Receipt, BarChart3,
   LogOut, Menu, X, UserCog

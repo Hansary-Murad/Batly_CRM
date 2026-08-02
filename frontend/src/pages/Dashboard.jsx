@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
 import { TrendingUp, TrendingDown, Users, Package, Truck, DollarSign, AlertCircle, ArrowUpRight } from 'lucide-react'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import api from '@/lib/api'
+import api from '../lib/api'
 import toast from 'react-hot-toast'
 
 export function Dashboard() {

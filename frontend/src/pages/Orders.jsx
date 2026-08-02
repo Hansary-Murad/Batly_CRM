@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
+import { Input } from '../components/ui/Input'
+import { Badge } from '../components/ui/Badge'
 import { Plus, Trash2, Loader2 } from 'lucide-react'
-import api from '@/lib/api'
+import api from '../lib/api'
 import toast from 'react-hot-toast'
 
 export function Orders() {
