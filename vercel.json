@@ -1,4 +1,8 @@
 {
+  "env": {
+    "DATABASE_URL": "postgresql://postgres:hansaryev.95@aucnehelqjevrthndbe.supabase.co:5432/postgres",
+    "JWT_SECRET": "batly-enterprise-secret-key-2026"
+  },
   "services": {
     "frontend": {
       "root": "frontend",
