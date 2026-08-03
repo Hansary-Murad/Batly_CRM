@@ -4,6 +4,10 @@
     {
       "src": "backend/src/app.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/dist/**",
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
@@ -12,8 +16,16 @@
       "dest": "backend/src/app.js"
     },
     {
+      "src": "/favicon.ico",
+      "dest": "frontend/dist/favicon.ico"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "frontend/dist/assets/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "dest": "frontend/dist/index.html"
     }
   ]
 }
