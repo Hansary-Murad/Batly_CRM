@@ -1,34 +1,19 @@
 {
-  "env": {
-    "DATABASE_URL": "postgresql://neondb_owner:npg_phkO4m7gnTMI@ep-proud-bar-agbenp81-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require",
-    "JWT_SECRET": "batly-enterprise-secret-key-2026"
-  },
-  "services": {
-    "frontend": {
-      "root": "frontend",
-      "framework": "vite",
-      "buildCommand": "npm run build",
-      "outputDirectory": "dist"
-    },
-    "backend": {
-      "root": "backend",
-      "entrypoint": "src/app.js"
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/src/app.js",
+      "use": "@vercel/node"
     }
-  },
-  "rewrites": [
+  ],
+  "routes": [
     {
-      "source": "/api(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "backend"
-      }
+      "src": "/api/(.*)",
+      "dest": "backend/src/app.js"
     },
     {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
+      "src": "/(.*)",
+      "dest": "frontend/dist/$1"
     }
   ]
 }
