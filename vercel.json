@@ -1,6 +1,6 @@
 {
   "env": {
-    "DATABASE_URL": "postgresql://postgres:hansaryev.95@aucnehelqjeyrthndeb.supabase.co:5432/postgres",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_phkO4m7gnTMI@ep-proud-bar-agbenp81-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require",
     "JWT_SECRET": "batly-enterprise-secret-key-2026"
   },
   "services": {
