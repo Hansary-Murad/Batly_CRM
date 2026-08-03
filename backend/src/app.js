@@ -1,4 +1,6 @@
 require('dotenv').config();
+console.log('🚀 DATABASE_URL:', process.env.DATABASE_URL); // ✅ ДЛЯ ОТЛАДКИ
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -510,10 +512,8 @@ app.get('/api/products', auth, async (req, res) => {
 });
 
 // ================================================================
-// ✅ USERS (УПРАВЛЕНИЕ ПЕРСОНАЛОМ) - ДОБАВЛЕНО
+// USERS
 // ================================================================
-
-// Получить всех сотрудников (только админ)
 app.get('/api/users', auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -539,7 +539,6 @@ app.get('/api/users', auth, async (req, res) => {
   }
 });
 
-// Создать сотрудника (только админ)
 app.post('/api/users', auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -581,7 +580,6 @@ app.post('/api/users', auth, async (req, res) => {
   }
 });
 
-// Обновить сотрудника (только админ)
 app.put('/api/users/:id', auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -610,7 +608,7 @@ app.put('/api/users/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Пользователь не найден' });
     }
     
-    console.log(`✅ User #${id} updated: role=${role || 'unchanged'}, position=${position || 'unchanged'}`);
+    console.log(`✅ User #${id} updated`);
     res.json(result.rows[0]);
   } catch (err) {
     console.error('❌ Update user error:', err);
@@ -618,7 +616,6 @@ app.put('/api/users/:id', auth, async (req, res) => {
   }
 });
 
-// Удалить сотрудника (только админ)
 app.delete('/api/users/:id', auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -645,7 +642,7 @@ app.delete('/api/users/:id', auth, async (req, res) => {
       [userId]
     );
 
-    console.log(`✅ User #${userId} deleted by admin #${req.user.id}`);
+    console.log(`✅ User #${userId} deleted`);
     res.json({ message: 'Сотрудник удалён' });
   } catch (err) {
     console.error('❌ Delete user error:', err);
